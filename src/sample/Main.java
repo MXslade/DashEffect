@@ -49,6 +49,7 @@ public class Main extends Application {
 
         primaryStage.getScene().setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.SPACE) {
+                play_jump_sound();
                 if (left) {
                     jumpToRight.play();
                 } else {
@@ -127,5 +128,10 @@ public class Main extends Application {
         jumpMediaPlayer = new MediaPlayer(jumpSoundEffect);
         backgroundMediaPlayer = new MediaPlayer(backgroundMusic);
         backgroundMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+    }
+
+    private void play_jump_sound(){
+        jumpMediaPlayer.seek(jumpMediaPlayer.getStartTime());
+        jumpMediaPlayer.play();
     }
 }
