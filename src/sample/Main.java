@@ -135,13 +135,13 @@ public class Main extends Application {
         jumpSoundEffect = new Media(new File(jumpAudioFileStr).toURI().toString());
         backgroundMusic = new Media(new File(backgroundAudioFileStr).toURI().toString());
 
-        //jumpMediaPlayer = new MediaPlayer(jumpSoundEffect);
+        jumpMediaPlayer = new MediaPlayer(jumpSoundEffect);
         backgroundMediaPlayer = new MediaPlayer(backgroundMusic);
         backgroundMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
     }
 
     private void play_jump_sound(){
-        jumpMediaPlayer = new MediaPlayer(jumpSoundEffect);
+        jumpMediaPlayer.seek(jumpMediaPlayer.getStartTime());
         jumpMediaPlayer.play();
     }
 
