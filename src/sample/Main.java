@@ -7,9 +7,13 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import java.io.File;
 
 public class Main extends Application {
 
@@ -96,6 +100,7 @@ public class Main extends Application {
             @Override
             public void handle(long l) {
                 if (xPlayer.get() > RIGHT_EDGE - PLAYER_WIDTH) {
+                    play_jump_sound();
                     xPlayer.set(RIGHT_EDGE - PLAYER_WIDTH);
                     System.out.println(xPlayer);
                     stop();
@@ -110,4 +115,26 @@ public class Main extends Application {
             }
         };
     }
+
+    public void play_jump_sound(){
+        String jumpAudioFile = "./Audio/Dash_Effect_Jump1.mp3";     // For example
+        File test  = new File(jumpAudioFile);
+
+        Media jump_sound_effect = new Media(test.toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(jump_sound_effect);
+        mediaPlayer.play();
+    }
+
+    /*
+    import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import java.io.File;
+
+
+    String musicFile = "StayTheNight.mp3";     // For example
+
+Media sound = new Media(new File(musicFile).toURI().toString());
+MediaPlayer mediaPlayer = new MediaPlayer(sound);
+mediaPlayer.play();
+ */
 }
