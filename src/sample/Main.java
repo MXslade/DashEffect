@@ -1,18 +1,17 @@
 package sample;
 
-import javafx.animation.AnimationTimer;
+import javafx.animation.TranslateTransition;
 import javafx.application.Application;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
-import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
+
 import java.io.File;
 
 public class Main extends Application {
@@ -24,8 +23,6 @@ public class Main extends Application {
     private Pane root;
 
     private Rectangle player;
-    private DoubleProperty xPlayer = new SimpleDoubleProperty((1 - PLAYGROUND) / 2 * WIDTH);
-    private DoubleProperty yPlayer = new SimpleDoubleProperty(HEIGHT * 2.0 / 3);
 
     public static final int PLAYER_WIDTH = 50;
     public static final int PLAYER_HEIGHT = 50;
@@ -34,8 +31,8 @@ public class Main extends Application {
     public static final double RIGHT_EDGE = (1 - PLAYGROUND) / 2 * WIDTH + WIDTH * PLAYGROUND;
 
     private boolean left = true;
-    private AnimationTimer jumpAnimation;
-
+    private TranslateTransition jumpToRight;
+    private TranslateTransition jumpToLeft;
 
     Media jumpSoundEffect;
     Media backgroundMusic;
@@ -44,7 +41,7 @@ public class Main extends Application {
 
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) {
         primaryStage.setTitle("Dash Effect");
         primaryStage.setScene(new Scene(createRoot(), WIDTH, HEIGHT));
         primaryStage.show();
@@ -52,8 +49,12 @@ public class Main extends Application {
 
         primaryStage.getScene().setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.SPACE) {
-                //play_jump_sound();
-                jumpAnimation.start();
+                play_jump_sound();
+                if (left) {
+                    jumpToRight.play();
+                } else {
+                    jumpToLeft.play();
+                }
                 left = !left;
             }
         });
@@ -101,30 +102,19 @@ public class Main extends Application {
         player = new Rectangle();
         player.setHeight(PLAYER_HEIGHT);
         player.setWidth(PLAYER_WIDTH);
-        player.xProperty().bind(xPlayer);
-        player.yProperty().bind(yPlayer);
         root.getChildren().add(player);
     }
 
     private void createAnimation() {
-        jumpAnimation = new AnimationTimer() {
-            @Override
-            public void handle(long l) {
-                if (xPlayer.get() > RIGHT_EDGE - PLAYER_WIDTH) {
-                    play_jump_sound();
-                    xPlayer.set(RIGHT_EDGE - PLAYER_WIDTH);
-                    System.out.println(xPlayer);
-                    stop();
-                }
-                if (xPlayer.get() < LEFT_EDGE) {
-                    xPlayer.set(LEFT_EDGE);
-                    System.out.println(yPlayer);
-                    stop();
-                }
-                double velocity = (left ? -10 : 10);
-                xPlayer.set(xPlayer.get() + velocity);
-            }
-        };
+        jumpToRight = new TranslateTransition();
+        jumpToRight.setDuration(Duration.seconds(0.5));
+        jumpToRight.setToX(RIGHT_EDGE - PLAYER_WIDTH);
+        jumpToRight.setNode(player);
+
+        jumpToLeft = new TranslateTransition();
+        jumpToLeft.setDuration(Duration.seconds(0.5));
+        jumpToLeft.setToX(LEFT_EDGE);
+        jumpToLeft.setNode(player);
     }
 
     private void createMedia(){
@@ -144,17 +134,4 @@ public class Main extends Application {
         jumpMediaPlayer.seek(jumpMediaPlayer.getStartTime());
         jumpMediaPlayer.play();
     }
-
-    /*
-    import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import java.io.File;
-
-
-    String musicFile = "StayTheNight.mp3";     // For example
-
-Media sound = new Media(new File(musicFile).toURI().toString());
-MediaPlayer mediaPlayer = new MediaPlayer(sound);
-mediaPlayer.play();
- */
 }
