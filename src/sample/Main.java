@@ -36,14 +36,23 @@ public class Main extends Application {
     private boolean left = true;
     private AnimationTimer jumpAnimation;
 
+
+    Media jumpSoundEffect;
+    Media backgroundMusic;
+    MediaPlayer jumpMediaPlayer;
+    MediaPlayer backgroundMediaPlayer;
+
+
     @Override
     public void start(Stage primaryStage) throws Exception{
         primaryStage.setTitle("Dash Effect");
         primaryStage.setScene(new Scene(createRoot(), WIDTH, HEIGHT));
         primaryStage.show();
+        backgroundMediaPlayer.play();
 
         primaryStage.getScene().setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.SPACE) {
+                //play_jump_sound();
                 jumpAnimation.start();
                 left = !left;
             }
@@ -64,6 +73,8 @@ public class Main extends Application {
         createPlayer();
 
         createAnimation();
+
+        createMedia();
 
         return root;
     }
@@ -116,13 +127,22 @@ public class Main extends Application {
         };
     }
 
-    public void play_jump_sound(){
-        String jumpAudioFile = "./Audio/Dash_Effect_Jump1.mp3";     // For example
-        File test  = new File(jumpAudioFile);
+    private void createMedia(){
+        String jumpAudioFileStr = "./Audio/Dash_Effect_Jump1.mp3";
+        String backgroundAudioFileStr = "./Audio/Tetris Effect - The Deep_ Yours Forever - Theater Mode (192  kbps).mp3";
 
-        Media jump_sound_effect = new Media(test.toURI().toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(jump_sound_effect);
-        mediaPlayer.play();
+
+        jumpSoundEffect = new Media(new File(jumpAudioFileStr).toURI().toString());
+        backgroundMusic = new Media(new File(backgroundAudioFileStr).toURI().toString());
+
+        //jumpMediaPlayer = new MediaPlayer(jumpSoundEffect);
+        backgroundMediaPlayer = new MediaPlayer(backgroundMusic);
+        backgroundMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+    }
+
+    private void play_jump_sound(){
+        jumpMediaPlayer = new MediaPlayer(jumpSoundEffect);
+        jumpMediaPlayer.play();
     }
 
     /*
