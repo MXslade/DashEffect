@@ -1,18 +1,15 @@
 package sample.Animation;
 
-import javafx.animation.Animation;
-import javafx.animation.AnimationTimer;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 public class JumpAnimation {
 
     public static double JUMP_DURATION = 0.5;
-    public static double GRAVITY_ACCELERATION = 0.4;
 
     private TranslateTransition animationByX;
-    private AnimationTimer animationByY;
+    private Timeline animationByY;
 
     private double startVelocity = -10;
 
@@ -22,22 +19,17 @@ public class JumpAnimation {
         animationByX.setDuration(Duration.seconds(JUMP_DURATION));
         animationByX.setToX(finalXPoint);
 
-        animationByY = new AnimationTimer() {
-            @Override
-            public void handle(long l) {
-                if (animationByX.getStatus() == Animation.Status.RUNNING) {
-                    startVelocity += GRAVITY_ACCELERATION;
-                    player.setY(player.getY() + startVelocity);
-                }
-            }
-        };
-
+        animationByY = new Timeline();
+        animationByY.setCycleCount(2);
+        animationByY.setAutoReverse(true);
+        animationByY.getKeyFrames().add(
+                new KeyFrame(Duration.seconds(JUMP_DURATION / 2),
+                new KeyValue(player.translateYProperty(), -50)));
     }
 
     public void play() {
-        startVelocity = -10;
         animationByX.play();
-        animationByY.start();
+        animationByY.play();
     }
 
 }
