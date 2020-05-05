@@ -50,7 +50,11 @@ public class Main extends Application {
 
         primaryStage.getScene().setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.SPACE) {
+                if( !connectedWithWall() ){
+                    return;
+                }
                 playJumpSound();
+                System.out.println();
                 if (left) {
                     jumpToRight.play();
                 } else {
@@ -59,6 +63,10 @@ public class Main extends Application {
                 left = !left;
             }
         });
+    }
+
+    private boolean connectedWithWall(){
+        return ( player.getTranslateX() == 0.0 || player.getTranslateX() == 480.0 || player.getTranslateX() == 750.0);
     }
 
     public static void main(String[] args) {
