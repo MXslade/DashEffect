@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import sample.Animation.JumpAnimation;
 
 import java.io.File;
 
@@ -31,8 +32,8 @@ public class Main extends Application {
     public static final double RIGHT_EDGE = (1 - PLAYGROUND) / 2 * WIDTH + WIDTH * PLAYGROUND;
 
     private boolean left = true;
-    private TranslateTransition jumpToRight;
-    private TranslateTransition jumpToLeft;
+    private JumpAnimation jumpToLeft;
+    private JumpAnimation jumpToRight;
 
     Media jumpSoundEffect;
     Media backgroundMusic;
@@ -49,7 +50,7 @@ public class Main extends Application {
 
         primaryStage.getScene().setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.SPACE) {
-                play_jump_sound();
+                playJumpSound();
                 if (left) {
                     jumpToRight.play();
                 } else {
@@ -102,19 +103,13 @@ public class Main extends Application {
         player = new Rectangle();
         player.setHeight(PLAYER_HEIGHT);
         player.setWidth(PLAYER_WIDTH);
+        player.setY(HEIGHT * 2.0 / 3);
         root.getChildren().add(player);
     }
 
     private void createAnimation() {
-        jumpToRight = new TranslateTransition();
-        jumpToRight.setDuration(Duration.seconds(0.5));
-        jumpToRight.setToX(RIGHT_EDGE - PLAYER_WIDTH);
-        jumpToRight.setNode(player);
-
-        jumpToLeft = new TranslateTransition();
-        jumpToLeft.setDuration(Duration.seconds(0.5));
-        jumpToLeft.setToX(LEFT_EDGE);
-        jumpToLeft.setNode(player);
+        jumpToRight = new JumpAnimation(player, RIGHT_EDGE - PLAYER_WIDTH);
+        jumpToLeft = new JumpAnimation(player, LEFT_EDGE);
     }
 
     private void createMedia(){
@@ -130,7 +125,7 @@ public class Main extends Application {
         backgroundMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
     }
 
-    private void play_jump_sound(){
+    private void playJumpSound(){
         jumpMediaPlayer.seek(jumpMediaPlayer.getStartTime());
         jumpMediaPlayer.play();
     }
