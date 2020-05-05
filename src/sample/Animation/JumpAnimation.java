@@ -3,6 +3,9 @@ package sample.Animation;
 import javafx.animation.*;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import sample.Main;
+
+import javax.print.attribute.standard.Media;
 
 public class JumpAnimation {
 
@@ -11,9 +14,14 @@ public class JumpAnimation {
     private TranslateTransition animationByX;
     private Timeline animationByY;
 
-    private double startVelocity = -10;
+    private RotateTransition rotateToRight;
+    private RotateTransition rotateToLeft;
+
+    private double finalXPoint;
 
     public JumpAnimation(Rectangle player, double finalXPoint) {
+        this.finalXPoint = finalXPoint;
+
         animationByX = new TranslateTransition();
         animationByX.setNode(player);
         animationByX.setDuration(Duration.seconds(JUMP_DURATION));
@@ -25,11 +33,24 @@ public class JumpAnimation {
         animationByY.getKeyFrames().add(
                 new KeyFrame(Duration.seconds(JUMP_DURATION / 2),
                         new KeyValue(player.translateYProperty(), -50)));
+
+        rotateToRight = new RotateTransition();
+        rotateToRight.setNode(player);
+        rotateToRight.setByAngle(-90);
+
+        rotateToLeft = new RotateTransition();
+        rotateToLeft.setNode(player);
+        rotateToLeft.setByAngle(90);
     }
 
     public void play() {
         animationByX.play();
         animationByY.play();
+        if (finalXPoint == Main.LEFT_EDGE) {
+            rotateToRight.play();
+        } else {
+            rotateToLeft.play();
+        }
     }
 
 }
