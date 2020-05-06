@@ -5,8 +5,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import sample.Main;
 
-import javax.print.attribute.standard.Media;
-
 public class JumpAnimation {
 
     public static double JUMP_DURATION = 0.5;
@@ -36,11 +34,11 @@ public class JumpAnimation {
 
         rotateToRight = new RotateTransition();
         rotateToRight.setNode(player);
-        rotateToRight.setByAngle(-90);
+        rotateToRight.setByAngle(-270);
 
         rotateToLeft = new RotateTransition();
         rotateToLeft.setNode(player);
-        rotateToLeft.setByAngle(90);
+        rotateToLeft.setByAngle(270);
     }
 
     public void play() {

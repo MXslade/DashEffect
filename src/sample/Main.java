@@ -1,10 +1,17 @@
 package sample;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
+import javafx.beans.property.DoubleProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -41,6 +48,10 @@ public class Main extends Application {
     MediaPlayer backgroundMediaPlayer;
 
 
+    ImageView imageView;
+    ImageView imageView2;
+    ImageView tempImageView;
+
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Dash Effect");
@@ -48,13 +59,14 @@ public class Main extends Application {
         primaryStage.show();
         backgroundMediaPlayer.play();
 
+
         primaryStage.getScene().setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.SPACE) {
                 if( !connectedWithWall() ){
                     return;
                 }
+                moveBG();
                 playJumpSound();
-                System.out.println();
                 if (left) {
                     jumpToRight.play();
                 } else {
@@ -77,7 +89,7 @@ public class Main extends Application {
         root = new Pane();
 
         createBackground();
-
+        createBackgroundImage();
         createPlayground();
 
         createPlayer();
@@ -85,6 +97,9 @@ public class Main extends Application {
         createAnimation();
 
         createMedia();
+
+        createBgMovement();
+
 
         return root;
     }
@@ -137,4 +152,49 @@ public class Main extends Application {
         jumpMediaPlayer.seek(jumpMediaPlayer.getStartTime());
         jumpMediaPlayer.play();
     }
+
+    private void createBackgroundImage(){
+        imageView = new ImageView(new Image(new File("./Media/Background_v2.jpg").toURI().toString()));
+        imageView2 = new ImageView(new Image(new File("./Media/Background_v2.jpg").toURI().toString()));
+
+        imageView.setX(0);
+        imageView.setY(0);
+        imageView.setPreserveRatio(true);
+
+        imageView.setFitWidth(1280);
+        root.getChildren().add(imageView);
+
+        imageView2.setX(0);
+        imageView2.setY(-1 * imageView.getBoundsInLocal().getHeight());
+        imageView2.setPreserveRatio(true);
+
+        imageView2.setFitWidth(1280);
+        root.getChildren().add(imageView2);
+    }
+
+    private void moveBG(){
+        imageView.setY( imageView.getY() + 3);
+    }
+
+    private void createBgMovement(){
+        Timeline fiveSecondsWonder = new Timeline(new KeyFrame(Duration.seconds(0.01), new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                if(imageView.getY() > imageView.getBoundsInLocal().getHeight()){
+                    imageView.setY( -1 * imageView.getBoundsInLocal().getHeight());
+                    tempImageView = imageView;
+                    imageView = imageView2;
+                    imageView2 = tempImageView;
+                    return;
+
+                }
+                imageView.setY( imageView.getY() + 1);
+                imageView2.setY( imageView.getY() - imageView.getBoundsInLocal().getHeight());
+            }
+        }));
+        fiveSecondsWonder.setCycleCount(Timeline.INDEFINITE);
+        fiveSecondsWonder.play();
+    }
+
 }
