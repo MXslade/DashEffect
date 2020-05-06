@@ -2,16 +2,12 @@ package sample;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.animation.TranslateTransition;
 import javafx.application.Application;
-import javafx.beans.property.DoubleProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -42,15 +38,14 @@ public class Main extends Application {
     private JumpAnimation jumpToLeft;
     private JumpAnimation jumpToRight;
 
-    Media jumpSoundEffect;
-    Media backgroundMusic;
-    MediaPlayer jumpMediaPlayer;
-    MediaPlayer backgroundMediaPlayer;
+    private Media jumpSoundEffect;
+    private Media backgroundMusic;
+    private MediaPlayer jumpMediaPlayer;
+    private MediaPlayer backgroundMediaPlayer;
 
-
-    ImageView imageView;
-    ImageView imageView2;
-    ImageView tempImageView;
+    private ImageView imageView;
+    private ImageView imageView2;
+    private ImageView tempImageView;
 
     @Override
     public void start(Stage primaryStage) {
@@ -65,7 +60,7 @@ public class Main extends Application {
                 if( !connectedWithWall() ){
                     return;
                 }
-                moveBG();
+                //moveBG();
                 playJumpSound();
                 if (left) {
                     jumpToRight.play();
@@ -172,26 +167,19 @@ public class Main extends Application {
         root.getChildren().add(imageView2);
     }
 
-    private void moveBG(){
-        imageView.setY( imageView.getY() + 3);
-    }
-
     private void createBgMovement(){
-        Timeline fiveSecondsWonder = new Timeline(new KeyFrame(Duration.seconds(0.01), new EventHandler<ActionEvent>() {
+        Timeline fiveSecondsWonder = new Timeline(new KeyFrame(Duration.seconds(0.01), event -> {
+            if(imageView.getY() > imageView.getBoundsInLocal().getHeight()){
+                imageView.setY( -1 * imageView.getBoundsInLocal().getHeight());
+                tempImageView = imageView;
+                imageView = imageView2;
+                imageView2 = tempImageView;
+                return;
 
-            @Override
-            public void handle(ActionEvent event) {
-                if(imageView.getY() > imageView.getBoundsInLocal().getHeight()){
-                    imageView.setY( -1 * imageView.getBoundsInLocal().getHeight());
-                    tempImageView = imageView;
-                    imageView = imageView2;
-                    imageView2 = tempImageView;
-                    return;
-
-                }
-                imageView.setY( imageView.getY() + 1);
-                imageView2.setY( imageView.getY() - imageView.getBoundsInLocal().getHeight());
             }
+            int speed = (connectedWithWall() ? 1 : 2);
+            imageView.setY( imageView.getY() + speed);
+            imageView2.setY( imageView.getY() - imageView.getBoundsInLocal().getHeight());
         }));
         fiveSecondsWonder.setCycleCount(Timeline.INDEFINITE);
         fiveSecondsWonder.play();
