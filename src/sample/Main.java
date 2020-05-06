@@ -196,5 +196,4 @@ public class Main extends Application {
         fiveSecondsWonder.setCycleCount(Timeline.INDEFINITE);
         fiveSecondsWonder.play();
     }
-
 }
