@@ -4,8 +4,6 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -40,10 +38,6 @@ public class Particle {
         rotationAnimation.play();
     }
 
-    public Rectangle getRectangle() {
-        return rectangle;
-    }
-
     private void createVariables() {
         Random random = new Random();
         xSpeed = random.nextDouble();
@@ -60,43 +54,37 @@ public class Particle {
     }
 
     private void createAnimation() {
-        expandingAnimation = new Timeline(new KeyFrame(Duration.seconds(0.01), new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                rectangle.setHeight(rectangle.getHeight() + 0.2);
-                rectangle.setWidth(rectangle.getWidth() + 0.2);
-                if (rectangle.getHeight() >= finalSize) {
-                    rectangle.setHeight(initialSize);
-                    rectangle.setWidth(initialSize);
-                    rectangle.setTranslateY(player.getRectangle().getTranslateY() + player.getRectangle().getWidth());
-                    if (!player.connectedWithWall()) {
-                        return;
-                    }
-                    if (player.connectedWithLeftWall()) {
-                        rectangle.setTranslateX(player.getRectangle().getTranslateX());
-                    } else {
-                        rectangle.setTranslateX(player.getRectangle().getTranslateX() + player.getRectangle().getWidth());
-                    }
+        expandingAnimation = new Timeline(new KeyFrame(Duration.seconds(0.01), actionEvent -> {
+            rectangle.setHeight(rectangle.getHeight() + 0.2);
+            rectangle.setWidth(rectangle.getWidth() + 0.2);
+            if (rectangle.getHeight() >= finalSize) {
+                rectangle.setHeight(initialSize);
+                rectangle.setWidth(initialSize);
+                rectangle.setTranslateY(player.getRectangle().getTranslateY() + player.getRectangle().getWidth());
+                if (!player.connectedWithWall()) {
+                    return;
+                }
+                if (player.connectedWithLeftWall()) {
+                    rectangle.setTranslateX(player.getRectangle().getTranslateX());
+                } else {
+                    rectangle.setTranslateX(player.getRectangle().getTranslateX() + player.getRectangle().getWidth());
                 }
             }
         }));
 
         expandingAnimation.setCycleCount(Animation.INDEFINITE);
-        movementAnimation = new Timeline(new KeyFrame(Duration.seconds(0.01), new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                if (!player.connectedWithWall()) {
-                    return;
-                }
-                xSpeed = Math.abs(xSpeed);
-                rotationSpeed = Math.abs(ySpeed);
-                if (player.connectedWithRightWall()) {
-                    xSpeed = -1 * xSpeed;
-                    rotationSpeed = -1 * rotationSpeed;
-                }
-                rectangle.setTranslateX(rectangle.getTranslateX() + xSpeed);
-                rectangle.setTranslateY(rectangle.getTranslateY() + ySpeed);
+        movementAnimation = new Timeline(new KeyFrame(Duration.seconds(0.01), actionEvent -> {
+            if (!player.connectedWithWall()) {
+                return;
             }
+            xSpeed = Math.abs(xSpeed);
+            rotationSpeed = Math.abs(ySpeed);
+            if (player.connectedWithRightWall()) {
+                xSpeed = -1 * xSpeed;
+                rotationSpeed = -1 * rotationSpeed;
+            }
+            rectangle.setTranslateX(rectangle.getTranslateX() + xSpeed);
+            rectangle.setTranslateY(rectangle.getTranslateY() + ySpeed);
         }));
         movementAnimation.setCycleCount(Animation.INDEFINITE);
 

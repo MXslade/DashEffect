@@ -2,8 +2,6 @@ package sample.Animation.ParticleGeneration;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import sample.Model.Particle;
@@ -34,22 +32,6 @@ public class MovementParticlesGeneration {
         launchingParticles.play();
     }
 
-    public int getNumberOfParticles() {
-        return numberOfParticles;
-    }
-
-    public void setNumberOfParticles(int numberOfParticles) {
-        this.numberOfParticles = numberOfParticles;
-    }
-
-    public ArrayList<Particle> getParticles() {
-        return particles;
-    }
-
-    public void setParticles(ArrayList<Particle> particles) {
-        this.particles = particles;
-    }
-
     private void createParticles() {
         for (int i = 0; i < numberOfParticles; ++i) {
             Particle particle = new Particle(root, player);
@@ -58,12 +40,9 @@ public class MovementParticlesGeneration {
     }
 
     private void createAnimation() {
-        launchingParticles = new Timeline(new KeyFrame(Duration.seconds(0.25), new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                particles.get(currentParticle).play();
-                currentParticle++;
-            }
+        launchingParticles = new Timeline(new KeyFrame(Duration.seconds(0.25), actionEvent -> {
+            particles.get(currentParticle).play();
+            currentParticle++;
         }));
         launchingParticles.setCycleCount(numberOfParticles);
     }

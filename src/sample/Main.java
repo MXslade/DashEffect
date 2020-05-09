@@ -33,7 +33,6 @@ public class Main extends Application {
     public static final double LEFT_EDGE = (1 - PLAYGROUND) / 2 * WIDTH;
     public static final double RIGHT_EDGE = (1 - PLAYGROUND) / 2 * WIDTH + WIDTH * PLAYGROUND;
 
-    private Media backgroundMusic;
     private MediaPlayer backgroundMediaPlayer;
 
     private ImageView imageView;
@@ -99,7 +98,7 @@ public class Main extends Application {
 
     private void createMedia(){
         String backgroundAudioFileStr = "./Audio/Tetris Effect - The Deep_ Yours Forever - Theater Mode (192  kbps).mp3";
-        backgroundMusic = new Media(new File(backgroundAudioFileStr).toURI().toString());
+        Media backgroundMusic = new Media(new File(backgroundAudioFileStr).toURI().toString());
 
         backgroundMediaPlayer = new MediaPlayer(backgroundMusic);
         backgroundMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);

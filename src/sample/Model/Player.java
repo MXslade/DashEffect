@@ -16,16 +16,11 @@ public class Player {
     private double height;
     private double width;
 
-    private double leftEdge = Main.LEFT_EDGE;
-    private double rightEdge = Main.RIGHT_EDGE;
-
     private boolean left = true;
 
     private Rectangle rectangle;
     private JumpAnimation jumpToLeft;
     private JumpAnimation jumpToRight;
-    private MovementParticlesGeneration particlesGeneration;
-    private Media jumpSoundEffect;
     private MediaPlayer jumpMediaPlayer;
 
     public Player(Pane root, double height, double width) {
@@ -75,15 +70,17 @@ public class Player {
     }
 
     private void createAnimation() {
+        double rightEdge = Main.RIGHT_EDGE;
         jumpToRight = new JumpAnimation(rectangle, rightEdge - width);
+        double leftEdge = Main.LEFT_EDGE;
         jumpToLeft = new JumpAnimation(rectangle, leftEdge);
-        particlesGeneration = new MovementParticlesGeneration(10, root, this);
+        MovementParticlesGeneration particlesGeneration = new MovementParticlesGeneration(10, root, this);
         particlesGeneration.play();
     }
 
     private void createMedia() {
         String jumpAudioFileStr = "./Audio/Dash_Effect_Jump1.mp3";
-        jumpSoundEffect = new Media(new File(jumpAudioFileStr).toURI().toString());
+        Media jumpSoundEffect = new Media(new File(jumpAudioFileStr).toURI().toString());
         jumpMediaPlayer = new MediaPlayer(jumpSoundEffect);
     }
 
