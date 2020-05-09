@@ -1,11 +1,12 @@
 package sample.Animation.ParticleGeneration;
 
-import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
 import javafx.util.Duration;
+import sample.Model.Particle;
 import sample.Model.Player;
 
 import java.util.ArrayList;
@@ -16,12 +17,9 @@ public class MovementParticlesGeneration {
     private Player player;
 
     private int numberOfParticles;
-    private ArrayList<Circle> particles;
-    private int initialRadius = 1;
-    private int endRadius = 10;
-
-    private Timeline expandingAnimation;
-    private Timeline movementAnimation;
+    private ArrayList<Particle> particles;
+    private Timeline launchingParticles;
+    private int currentParticle = 0;
 
     public MovementParticlesGeneration(int numberOfParticles, Pane root, Player player) {
         this.numberOfParticles = numberOfParticles;
@@ -33,7 +31,7 @@ public class MovementParticlesGeneration {
     }
 
     public void play() {
-        expandingAnimation.play();
+        launchingParticles.play();
     }
 
     public int getNumberOfParticles() {
@@ -44,46 +42,30 @@ public class MovementParticlesGeneration {
         this.numberOfParticles = numberOfParticles;
     }
 
-    public ArrayList<Circle> getParticles() {
+    public ArrayList<Particle> getParticles() {
         return particles;
     }
 
-    public void setParticles(ArrayList<Circle> particles) {
+    public void setParticles(ArrayList<Particle> particles) {
         this.particles = particles;
-    }
-
-    private void createAnimation() {
-        expandingAnimation = new Timeline(new KeyFrame(Duration.seconds(0.01), actionEvent -> {
-            for (Circle circle : particles) {
-                if (!player.connectedWithWall()) {
-                    return;
-                }
-                circle.setRadius(circle.getRadius() + 0.1);
-                if (player.connectedWithLeftWall()) {
-                    circle.setTranslateX(player.getRectangle().getTranslateX());
-                } else {
-                    circle.setTranslateX(player.getRectangle().getTranslateX() + player.getRectangle().getWidth());
-                }
-                if (circle.getRadius() >= endRadius) {
-                    circle.setRadius(initialRadius);
-                    circle.setCenterY(player.getRectangle().getY() + player.getRectangle().getHeight());
-                }
-            }
-        }));
-        expandingAnimation.setCycleCount(Animation.INDEFINITE);
-//        movementAnimation = new Timeline(new KeyFrame(Duration.seconds(0.01), actionEvent -> {
-//
-//        }));
     }
 
     private void createParticles() {
         for (int i = 0; i < numberOfParticles; ++i) {
-            Circle circle = new Circle();
-            circle.setRadius(initialRadius);
-            particles.add(circle);
-            root.getChildren().add(circle);
+            Particle particle = new Particle(root, player);
+            particles.add(particle);
         }
     }
 
+    private void createAnimation() {
+        launchingParticles = new Timeline(new KeyFrame(Duration.seconds(0.25), new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                particles.get(currentParticle).play();
+                currentParticle++;
+            }
+        }));
+        launchingParticles.setCycleCount(numberOfParticles);
+    }
 
 }

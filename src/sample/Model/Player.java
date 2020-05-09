@@ -70,7 +70,7 @@ public class Player {
         rectangle = new Rectangle();
         rectangle.setHeight(height);
         rectangle.setWidth(width);
-        rectangle.setY(Main.HEIGHT * 2.0 / 3);
+        rectangle.setTranslateY(Main.HEIGHT * 2.0 / 3);
         root.getChildren().add(rectangle);
     }
 
