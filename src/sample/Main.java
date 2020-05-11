@@ -2,23 +2,20 @@ package sample;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.animation.TranslateTransition;
 import javafx.application.Application;
-import javafx.beans.property.DoubleProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import sample.Animation.JumpAnimation;
+import sample.Animation.ObstacleGeneration.ObstacleGeneration;
+import sample.Model.Player;
 
 import java.io.File;
 
@@ -29,8 +26,7 @@ public class Main extends Application {
     public static final double PLAYGROUND = 0.25;
 
     private Pane root;
-
-    private Rectangle player;
+    private Player player;
 
     public static final int PLAYER_WIDTH = 50;
     public static final int PLAYER_HEIGHT = 50;
@@ -38,19 +34,11 @@ public class Main extends Application {
     public static final double LEFT_EDGE = (1 - PLAYGROUND) / 2 * WIDTH;
     public static final double RIGHT_EDGE = (1 - PLAYGROUND) / 2 * WIDTH + WIDTH * PLAYGROUND;
 
-    private boolean left = true;
-    private JumpAnimation jumpToLeft;
-    private JumpAnimation jumpToRight;
+    private MediaPlayer backgroundMediaPlayer;
 
-    Media jumpSoundEffect;
-    Media backgroundMusic;
-    MediaPlayer jumpMediaPlayer;
-    MediaPlayer backgroundMediaPlayer;
-
-
-    ImageView imageView;
-    ImageView imageView2;
-    ImageView tempImageView;
+    private ImageView imageView;
+    private ImageView imageView2;
+    private ImageView tempImageView;
 
     Timeline bgMovementTimer;
 
@@ -64,6 +52,7 @@ public class Main extends Application {
 
         primaryStage.getScene().setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.SPACE) {
+<<<<<<< HEAD
                 if( !connectedWithWall() ){
                     return;
                 }
@@ -74,12 +63,11 @@ public class Main extends Application {
                     jumpToLeft.play();
                 }
                 left = !left;
+=======
+                player.jump();
+>>>>>>> a3a9a6027142f0bd9a183f0d15454e51895d1e82
             }
         });
-    }
-
-    private boolean connectedWithWall(){
-        return ( player.getTranslateX() == 0.0 || player.getTranslateX() == 480.0 || player.getTranslateX() == 750.0);
     }
 
     public static void main(String[] args) {
@@ -89,28 +77,19 @@ public class Main extends Application {
     private Pane createRoot() {
         root = new Pane();
 
-        createBackground();
+        //createBackground();
         createBackgroundImage();
         createPlayground();
 
         createPlayer();
 
-        createAnimation();
+        createObstacles();
 
         createMedia();
 
         createBgMovement();
 
-
         return root;
-    }
-
-    private void createBackground() {
-        Rectangle rectangle = new Rectangle();
-        rectangle.setWidth(WIDTH);
-        rectangle.setHeight(HEIGHT);
-        rectangle.setFill(Color.BLUE);
-        root.getChildren().add(rectangle);
     }
 
     private void createPlayground() {
@@ -124,34 +103,20 @@ public class Main extends Application {
     }
 
     private void createPlayer() {
-        player = new Rectangle();
-        player.setHeight(PLAYER_HEIGHT);
-        player.setWidth(PLAYER_WIDTH);
-        player.setY(HEIGHT * 2.0 / 3);
-        root.getChildren().add(player);
+        player = new Player(root, PLAYER_HEIGHT, PLAYER_WIDTH);
     }
 
-    private void createAnimation() {
-        jumpToRight = new JumpAnimation(player, RIGHT_EDGE - PLAYER_WIDTH);
-        jumpToLeft = new JumpAnimation(player, LEFT_EDGE);
+    private void createObstacles() {
+        ObstacleGeneration obstacleGeneration = new ObstacleGeneration(root, player, 2);
+        obstacleGeneration.play();
     }
 
     private void createMedia(){
-        String jumpAudioFileStr = "./Audio/Dash_Effect_Jump1.mp3";
         String backgroundAudioFileStr = "./Audio/Tetris Effect - The Deep_ Yours Forever - Theater Mode (192  kbps).mp3";
+        Media backgroundMusic = new Media(new File(backgroundAudioFileStr).toURI().toString());
 
-
-        jumpSoundEffect = new Media(new File(jumpAudioFileStr).toURI().toString());
-        backgroundMusic = new Media(new File(backgroundAudioFileStr).toURI().toString());
-
-        jumpMediaPlayer = new MediaPlayer(jumpSoundEffect);
         backgroundMediaPlayer = new MediaPlayer(backgroundMusic);
         backgroundMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-    }
-
-    private void playJumpSound(){
-        jumpMediaPlayer.seek(jumpMediaPlayer.getStartTime());
-        jumpMediaPlayer.play();
     }
 
     private void createBackgroundImage(){
@@ -162,18 +127,19 @@ public class Main extends Application {
         imageView.setY(0);
         imageView.setPreserveRatio(true);
 
-        imageView.setFitWidth(1280);
+        imageView.setFitWidth(WIDTH);
         root.getChildren().add(imageView);
 
         imageView2.setX(0);
         imageView2.setY(-1 * imageView.getBoundsInLocal().getHeight());
         imageView2.setPreserveRatio(true);
 
-        imageView2.setFitWidth(1280);
+        imageView2.setFitWidth(WIDTH);
         root.getChildren().add(imageView2);
     }
 
     private void createBgMovement(){
+<<<<<<< HEAD
         bgMovementTimer = new Timeline(new KeyFrame(Duration.seconds(0.01), new EventHandler<ActionEvent>() {
 
             @Override
@@ -188,7 +154,19 @@ public class Main extends Application {
                 int pixels = (connectedWithWall() ? 1: 2);
                 imageView.setY( imageView.getY() + pixels);
                 imageView2.setY( imageView.getY() - imageView.getBoundsInLocal().getHeight());
+=======
+        Timeline fiveSecondsWonder = new Timeline(new KeyFrame(Duration.seconds(0.01), event -> {
+            if(imageView.getY() > imageView.getBoundsInLocal().getHeight()){
+                imageView.setY( -1 * imageView.getBoundsInLocal().getHeight());
+                tempImageView = imageView;
+                imageView = imageView2;
+                imageView2 = tempImageView;
+                return;
+
+>>>>>>> a3a9a6027142f0bd9a183f0d15454e51895d1e82
             }
+            imageView.setY( imageView.getY() + (player.connectedWithWall() ? 1 : 2));
+            imageView2.setY( imageView.getY() - imageView.getBoundsInLocal().getHeight());
         }));
         bgMovementTimer.setCycleCount(Timeline.INDEFINITE);
         bgMovementTimer.play();

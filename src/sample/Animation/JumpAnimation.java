@@ -30,7 +30,7 @@ public class JumpAnimation {
         animationByY.setAutoReverse(true);
         animationByY.getKeyFrames().add(
                 new KeyFrame(Duration.seconds(JUMP_DURATION / 2),
-                        new KeyValue(player.translateYProperty(), -50)));
+                        new KeyValue(player.translateYProperty(), player.getTranslateY() - 75)));
 
         rotateToRight = new RotateTransition();
         rotateToRight.setNode(player);
