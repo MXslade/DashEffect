@@ -52,6 +52,8 @@ public class Main extends Application {
     ImageView imageView2;
     ImageView tempImageView;
 
+    Timeline bgMovementTimer;
+
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Dash Effect");
@@ -65,7 +67,6 @@ public class Main extends Application {
                 if( !connectedWithWall() ){
                     return;
                 }
-                moveBG();
                 playJumpSound();
                 if (left) {
                     jumpToRight.play();
@@ -172,12 +173,8 @@ public class Main extends Application {
         root.getChildren().add(imageView2);
     }
 
-    private void moveBG(){
-        imageView.setY( imageView.getY() + 3);
-    }
-
     private void createBgMovement(){
-        Timeline fiveSecondsWonder = new Timeline(new KeyFrame(Duration.seconds(0.01), new EventHandler<ActionEvent>() {
+        bgMovementTimer = new Timeline(new KeyFrame(Duration.seconds(0.01), new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
@@ -187,13 +184,13 @@ public class Main extends Application {
                     imageView = imageView2;
                     imageView2 = tempImageView;
                     return;
-
                 }
-                imageView.setY( imageView.getY() + 1);
+                int pixels = (connectedWithWall() ? 1: 2);
+                imageView.setY( imageView.getY() + pixels);
                 imageView2.setY( imageView.getY() - imageView.getBoundsInLocal().getHeight());
             }
         }));
-        fiveSecondsWonder.setCycleCount(Timeline.INDEFINITE);
-        fiveSecondsWonder.play();
+        bgMovementTimer.setCycleCount(Timeline.INDEFINITE);
+        bgMovementTimer.play();
     }
 }

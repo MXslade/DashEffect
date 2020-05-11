@@ -34,11 +34,11 @@ public class JumpAnimation {
 
         rotateToRight = new RotateTransition();
         rotateToRight.setNode(player);
-        rotateToRight.setByAngle(-270);
+        rotateToRight.setByAngle(-180);
 
         rotateToLeft = new RotateTransition();
         rotateToLeft.setNode(player);
-        rotateToLeft.setByAngle(270);
+        rotateToLeft.setByAngle(180);
     }
 
     public void play() {
