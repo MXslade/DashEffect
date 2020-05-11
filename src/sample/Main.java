@@ -14,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import sample.Animation.ObstacleGeneration.ObstacleGeneration;
 import sample.Model.Player;
 
 import java.io.File;
@@ -67,20 +68,14 @@ public class Main extends Application {
 
         createPlayer();
 
+        createObstacles();
+
         createMedia();
 
         createBgMovement();
 
         return root;
     }
-
-//    private void createBackground() {
-//        Rectangle rectangle = new Rectangle();
-//        rectangle.setWidth(WIDTH);
-//        rectangle.setHeight(HEIGHT);
-//        rectangle.setFill(Color.BLUE);
-//        root.getChildren().add(rectangle);
-//    }
 
     private void createPlayground() {
         Rectangle rectangle = new Rectangle();
@@ -94,6 +89,11 @@ public class Main extends Application {
 
     private void createPlayer() {
         player = new Player(root, PLAYER_HEIGHT, PLAYER_WIDTH);
+    }
+
+    private void createObstacles() {
+        ObstacleGeneration obstacleGeneration = new ObstacleGeneration(root, player, 2);
+        obstacleGeneration.play();
     }
 
     private void createMedia(){

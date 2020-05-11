@@ -43,13 +43,14 @@ public class Particle {
         xSpeed = random.nextDouble();
         ySpeed = 1;
         rotationSpeed = 360;
-        System.out.println(xSpeed);
     }
 
     private void createRectangle() {
         rectangle = new Rectangle();
         rectangle.setWidth(initialSize);
         rectangle.setHeight(initialSize);
+        rectangle.setTranslateX(player.getRectangle().getTranslateX());
+        rectangle.setTranslateY(player.getRectangle().getTranslateY() + player.getRectangle().getHeight());
         root.getChildren().add(rectangle);
     }
 

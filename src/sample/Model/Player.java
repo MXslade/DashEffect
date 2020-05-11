@@ -66,6 +66,7 @@ public class Player {
         rectangle.setHeight(height);
         rectangle.setWidth(width);
         rectangle.setTranslateY(Main.HEIGHT * 2.0 / 3);
+        rectangle.setTranslateX(Main.LEFT_EDGE);
         root.getChildren().add(rectangle);
     }
 
