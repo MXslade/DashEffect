@@ -3,7 +3,10 @@ package sample;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -12,12 +15,14 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import sample.Animation.ObstacleGeneration.ObstacleGeneration;
 import sample.Model.Player;
 
 import java.io.File;
+import java.io.IOException;
 
 public class Main extends Application {
 
@@ -36,38 +41,45 @@ public class Main extends Application {
 
     private MediaPlayer backgroundMediaPlayer;
 
+    // UI
+    private Timeline playerScoreTimer;
+    private int playerScore = 0;
+    private Label textPlayerScore = new Label();
+
     private ImageView imageView;
     private ImageView imageView2;
     private ImageView tempImageView;
 
-    Timeline bgMovementTimer;
+    private Timeline bgMovementTimer;
+    private int bgSpeed = 1;
+    private int bgSpeedWhenPlayerJumps = 4;
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Dash Effect");
-        primaryStage.setScene(new Scene(createRoot(), WIDTH, HEIGHT));
-        primaryStage.show();
-        backgroundMediaPlayer.play();
+
+        boolean launch = false;
+        try {
+            Parent menuRoot = FXMLLoader.load(getClass().getResource("testing.fxml"));
+            primaryStage.setTitle("Dash Effect Menu");
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
-        primaryStage.getScene().setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.SPACE) {
-<<<<<<< HEAD
-                if( !connectedWithWall() ){
-                    return;
+        if(launch){
+            primaryStage.setTitle("Dash Effect");
+            primaryStage.setScene(new Scene(createRoot(), WIDTH, HEIGHT));
+            primaryStage.show();
+            backgroundMediaPlayer.play();
+
+
+            primaryStage.getScene().setOnKeyPressed(keyEvent -> {
+                if (keyEvent.getCode() == KeyCode.SPACE) {
+                    player.jump();
                 }
-                playJumpSound();
-                if (left) {
-                    jumpToRight.play();
-                } else {
-                    jumpToLeft.play();
-                }
-                left = !left;
-=======
-                player.jump();
->>>>>>> a3a9a6027142f0bd9a183f0d15454e51895d1e82
-            }
-        });
+            });
+        }
     }
 
     public static void main(String[] args) {
@@ -89,6 +101,8 @@ public class Main extends Application {
 
         createBgMovement();
 
+        createUserScore();
+        root.getChildren().add(textPlayerScore);
         return root;
     }
 
@@ -139,36 +153,31 @@ public class Main extends Application {
     }
 
     private void createBgMovement(){
-<<<<<<< HEAD
-        bgMovementTimer = new Timeline(new KeyFrame(Duration.seconds(0.01), new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                if(imageView.getY() > imageView.getBoundsInLocal().getHeight()){
-                    imageView.setY( -1 * imageView.getBoundsInLocal().getHeight());
-                    tempImageView = imageView;
-                    imageView = imageView2;
-                    imageView2 = tempImageView;
-                    return;
-                }
-                int pixels = (connectedWithWall() ? 1: 2);
-                imageView.setY( imageView.getY() + pixels);
-                imageView2.setY( imageView.getY() - imageView.getBoundsInLocal().getHeight());
-=======
-        Timeline fiveSecondsWonder = new Timeline(new KeyFrame(Duration.seconds(0.01), event -> {
+        bgMovementTimer = new Timeline(new KeyFrame(Duration.seconds(0.01), event -> {
             if(imageView.getY() > imageView.getBoundsInLocal().getHeight()){
                 imageView.setY( -1 * imageView.getBoundsInLocal().getHeight());
                 tempImageView = imageView;
                 imageView = imageView2;
                 imageView2 = tempImageView;
                 return;
-
->>>>>>> a3a9a6027142f0bd9a183f0d15454e51895d1e82
             }
-            imageView.setY( imageView.getY() + (player.connectedWithWall() ? 1 : 2));
+            imageView.setY( imageView.getY() + (player.connectedWithWall() ? bgSpeed : bgSpeedWhenPlayerJumps));
             imageView2.setY( imageView.getY() - imageView.getBoundsInLocal().getHeight());
         }));
         bgMovementTimer.setCycleCount(Timeline.INDEFINITE);
         bgMovementTimer.play();
+    }
+
+    private void createUserScore(){
+
+        //textPlayerScore.setX(50);
+        //textPlayerScore.setY(50);
+        playerScoreTimer = new Timeline(new KeyFrame(Duration.seconds(0.5), event -> {
+            textPlayerScore.setText( Integer.toString(++playerScore));
+        }));
+        bgMovementTimer.setCycleCount(Timeline.INDEFINITE);
+        bgMovementTimer.play();
+
+
     }
 }
