@@ -1,11 +1,10 @@
 package sample;
-import java.net.URL;
-import java.util.ResourceBundle;
 
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.stage.Stage;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class MainMenuController {
 
@@ -23,13 +22,6 @@ public class MainMenuController {
 
     @FXML
     void initialize() {
-        StartGameBtn.setOnAction(event -> {
-            Main.setPlayerScore(0);
-            Main.showGameScene();
-        });
-        ExitGameBtn.setOnAction(event->{
-            ((Stage)(((Button)event.getSource()).getScene().getWindow())).close();
-        });
 
     }
 }
