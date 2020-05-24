@@ -15,6 +15,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -30,6 +31,7 @@ public class Main extends Application {
     public static final int HEIGHT = 720;
     public static final double PLAYGROUND = 0.25;
 
+    private static Stage stage;
     private Pane root;
     private Player player;
 
@@ -39,47 +41,45 @@ public class Main extends Application {
     public static final double LEFT_EDGE = (1 - PLAYGROUND) / 2 * WIDTH;
     public static final double RIGHT_EDGE = (1 - PLAYGROUND) / 2 * WIDTH + WIDTH * PLAYGROUND;
 
-    private MediaPlayer backgroundMediaPlayer;
+    //Scenes
+    private static Scene mainMenuScene;
+    private static Scene gameScene;
 
     // UI
     private Timeline playerScoreTimer;
-    private int playerScore = 0;
+    private static int playerScore = 0;
     private Label textPlayerScore = new Label();
+
+    //Media
+    private static MediaPlayer backgroundMediaPlayer;
 
     private ImageView imageView;
     private ImageView imageView2;
     private ImageView tempImageView;
 
+    //Timers
     private Timeline bgMovementTimer;
     private int bgSpeed = 1;
     private int bgSpeedWhenPlayerJumps = 4;
 
     @Override
     public void start(Stage primaryStage) {
+        stage = primaryStage;
+        primaryStage.setTitle("Dash Effect");
+        createGameScene();
 
-        boolean launch = false;
-        try {
-            Parent menuRoot = FXMLLoader.load(getClass().getResource("testing.fxml"));
-            primaryStage.setTitle("Dash Effect Menu");
-            primaryStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        createMainMenuScene();
+        showMainMenuScene();
 
+        createGameScene();
 
-        if(launch){
-            primaryStage.setTitle("Dash Effect");
-            primaryStage.setScene(new Scene(createRoot(), WIDTH, HEIGHT));
-            primaryStage.show();
-            backgroundMediaPlayer.play();
+        stage.getScene().setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.SPACE) {
+                playerScore+=2;
+                player.jump();
+            }
+        });
 
-
-            primaryStage.getScene().setOnKeyPressed(keyEvent -> {
-                if (keyEvent.getCode() == KeyCode.SPACE) {
-                    player.jump();
-                }
-            });
-        }
     }
 
     public static void main(String[] args) {
@@ -104,6 +104,31 @@ public class Main extends Application {
         createUserScore();
         root.getChildren().add(textPlayerScore);
         return root;
+    }
+
+    private void createMainMenuScene(){
+        try {
+            Parent menuRoot = FXMLLoader.load(getClass().getResource("testing.fxml"));
+            mainMenuScene = new Scene(menuRoot);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createGameScene(){
+        gameScene = new Scene(createRoot(), WIDTH, HEIGHT);
+        playerScore = 0;
+    }
+
+    public static void showMainMenuScene(){
+        stage.setScene(mainMenuScene);
+        stage.show();
+    }
+
+    public static void showGameScene(){
+        stage.setScene(gameScene);
+        backgroundMediaPlayer.play();
+        stage.show();
     }
 
     private void createPlayground() {
@@ -169,15 +194,18 @@ public class Main extends Application {
     }
 
     private void createUserScore(){
-
-        //textPlayerScore.setX(50);
-        //textPlayerScore.setY(50);
+        textPlayerScore.setFont(new Font("Eras Demi ITC", 32));
+        textPlayerScore.setTextFill(Color.web("#1c1c26",1.0));
+        textPlayerScore.setLayoutX(15);
+        textPlayerScore.setLayoutY(20);
         playerScoreTimer = new Timeline(new KeyFrame(Duration.seconds(0.5), event -> {
             textPlayerScore.setText( Integer.toString(++playerScore));
         }));
-        bgMovementTimer.setCycleCount(Timeline.INDEFINITE);
-        bgMovementTimer.play();
+        playerScoreTimer.setCycleCount(Timeline.INDEFINITE);
+        playerScoreTimer.play();
+    }
 
-
+    public static void setPlayerScore(int score){
+        playerScore = score;
     }
 }

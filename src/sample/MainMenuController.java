@@ -24,9 +24,8 @@ public class MainMenuController {
     @FXML
     void initialize() {
         StartGameBtn.setOnAction(event -> {
-            ((Stage)(((Button)event.getSource()).getScene().getWindow())).hide();
-
-
+            Main.setPlayerScore(0);
+            Main.showGameScene();
         });
         ExitGameBtn.setOnAction(event->{
             ((Stage)(((Button)event.getSource()).getScene().getWindow())).close();
