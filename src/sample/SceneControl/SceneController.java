@@ -48,6 +48,6 @@ public class SceneController {
     }
 
     private void createGameScene() {
-        gameScene = new GameScene(stage);
+        gameScene = new GameScene(stage, this);
     }
 }

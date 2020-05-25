@@ -32,6 +32,10 @@ public class MovementParticlesGeneration {
         launchingParticles.play();
     }
 
+    public void pause() {
+        launchingParticles.pause();
+    }
+
     private void createParticles() {
         for (int i = 0; i < numberOfParticles; ++i) {
             Particle particle = new Particle(root, player);

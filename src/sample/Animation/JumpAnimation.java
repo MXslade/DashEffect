@@ -51,4 +51,9 @@ public class JumpAnimation {
         }
     }
 
+    public void pause(){
+        animationByX.pause();
+        animationByY.pause();
+    }
+
 }

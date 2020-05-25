@@ -26,6 +26,12 @@ public class ObstacleGeneration {
         }
     }
 
+    public void pause() {
+        for (Obstacle obstacle : obstacles) {
+            obstacle.pause();
+        }
+    }
+
     private void createObstacles() {
         obstacles = new ArrayList<>();
         for (int i = 0; i < numberOfObstacles; ++i) {

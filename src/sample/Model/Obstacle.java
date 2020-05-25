@@ -37,6 +37,10 @@ public class Obstacle {
         movementAnimation.play();
     }
 
+    public void pause(){
+        movementAnimation.pause();
+    }
+
     private void createPolygon() {
         polygon = new Polygon();
         polygon.getPoints().addAll(0.0, 0.0,
@@ -47,7 +51,10 @@ public class Obstacle {
 
     private void createAnimation() {
         movementAnimation = new Timeline(new KeyFrame(Duration.seconds(0.01), actionEvent -> {
-            polygon.setTranslateY(polygon.getTranslateY() + 1);
+            if(player.connectedWithWall())
+                polygon.setTranslateY(polygon.getTranslateY() + 1);
+            else
+                polygon.setTranslateY(polygon.getTranslateY() + 4);
             if (polygon.getTranslateY() > Main.HEIGHT) {
                 polygon.setTranslateY(0);
             }

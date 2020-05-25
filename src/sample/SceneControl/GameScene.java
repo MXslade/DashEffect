@@ -1,6 +1,7 @@
 package sample.SceneControl;
 
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -25,6 +26,7 @@ public class GameScene {
 
     private Stage stage;
     private Scene scene;
+    private SceneController sceneController;
 
     private Player player;
     private ObstacleGeneration obstacleGeneration;
@@ -43,12 +45,23 @@ public class GameScene {
     private Timeline playerScoreTimer;
     private int playerScore = 0;
 
-    public GameScene(Stage stage) {
+    boolean isPaused;
+
+    public GameScene(Stage stage, SceneController sceneController) {
         this.stage = stage;
+        this.sceneController = sceneController;
         scene = new Scene(createRoot(), Main.WIDTH, Main.HEIGHT);
         scene.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.SPACE) {
+            if (keyEvent.getCode() == KeyCode.SPACE && !isPaused) {
                 player.jump();
+            } else if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                if(isPaused){
+                    sceneController.startGame();
+                    this.play();
+                }else{
+                    sceneController.showMainMenu();
+                    this.pause();
+                }
             }
         });
     }
@@ -58,11 +71,21 @@ public class GameScene {
     }
 
     public void play() {
+        isPaused = false;
         player.play();
         obstacleGeneration.play();
         bgMovementTimer.play();
         playerScoreTimer.play();
         backgroundMediaPlayer.play();
+    }
+
+    public void pause(){
+        isPaused = true;
+        player.pause();
+        obstacleGeneration.pause();
+        bgMovementTimer.pause();
+        playerScoreTimer.pause();
+        backgroundMediaPlayer.pause();
     }
 
     private Pane createRoot() {

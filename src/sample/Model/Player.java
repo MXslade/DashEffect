@@ -35,11 +35,25 @@ public class Player {
     }
 
     public void play() {
+        if( !connectedWithWall() ){
+            if(left){
+                jumpToLeft.play();
+            }else{
+                jumpToRight.play();
+            }
+        }
         particlesGeneration.play();
     }
 
     public void pause() {
-
+        particlesGeneration.pause();
+        if( !connectedWithWall() ){
+            if(left){
+                jumpToLeft.pause();
+            }else{
+                jumpToRight.pause();
+            }
+        }
     }
 
     public void jump() {
