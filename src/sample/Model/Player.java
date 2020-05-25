@@ -23,6 +23,8 @@ public class Player {
     private JumpAnimation jumpToRight;
     private MediaPlayer jumpMediaPlayer;
 
+    private MovementParticlesGeneration particlesGeneration;
+
     public Player(Pane root, double height, double width) {
         this.root = root;
         this.height = height;
@@ -30,6 +32,14 @@ public class Player {
         createRectangle();
         createAnimation();
         createMedia();
+    }
+
+    public void play() {
+        particlesGeneration.play();
+    }
+
+    public void pause() {
+
     }
 
     public void jump() {
@@ -75,8 +85,8 @@ public class Player {
         jumpToRight = new JumpAnimation(rectangle, rightEdge - width);
         double leftEdge = Main.LEFT_EDGE;
         jumpToLeft = new JumpAnimation(rectangle, leftEdge);
-        MovementParticlesGeneration particlesGeneration = new MovementParticlesGeneration(10, root, this);
-        particlesGeneration.play();
+        particlesGeneration = new MovementParticlesGeneration(10, root, this);
+        //particlesGeneration.play();
     }
 
     private void createMedia() {

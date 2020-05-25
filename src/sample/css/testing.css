@@ -1,0 +1,19 @@
+.buttonClass {
+    -fx-background-color: #0980bb;
+    -fx-text-fill: #090100;
+    -fx-font-size: 24;
+}
+
+.buttonClass: hover {
+    -fx-background-color: #FF0000;
+}
+
+.labelClass {
+    -fx-text-fill: #0982ba;
+    -fx-font-family: 'Eras Demi ITC';
+    -fx-font-size: 64;
+}
+
+.paneClass {
+    -fx-background-color: #1c1c26;
+}

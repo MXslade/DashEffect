@@ -4,10 +4,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import sample.MainMenuController;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class SceneController {
 
@@ -15,8 +13,6 @@ public class SceneController {
     private Scene mainMenuScene;
     private GameScene gameScene;
     private MainMenuController mainMenuController;
-
-    private Pane root;
 
     public SceneController(Stage stage) {
         this.stage = stage;
@@ -29,12 +25,23 @@ public class SceneController {
         stage.show();
     }
 
+    public void startGame() {
+        stage.setScene(gameScene.getScene());
+        stage.show();
+        gameScene.play();
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
     private void createMainMenuScene() {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            Pane menuRoot = fxmlLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("./sample/testing.fxml")));
-            mainMenuController = (MainMenuController) fxmlLoader.getController();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("sample/fxmls/testing.fxml"));
+            Pane menuRoot = fxmlLoader.load();
+            mainMenuController = fxmlLoader.getController();
             mainMenuScene = new Scene(menuRoot);
+            mainMenuController.setSceneController(this);
         } catch (IOException e) {
             e.printStackTrace();
         }

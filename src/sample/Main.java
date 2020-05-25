@@ -10,8 +10,6 @@ public class Main extends Application {
     public static final int HEIGHT = 720;
     public static final double PLAYGROUND = 0.25;
 
-    private static Stage stage;
-
     public static final int PLAYER_WIDTH = 50;
     public static final int PLAYER_HEIGHT = 50;
 
@@ -20,7 +18,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        stage = primaryStage;
         primaryStage.setTitle("Dash Effect");
 
         SceneController sceneController = new SceneController(primaryStage);

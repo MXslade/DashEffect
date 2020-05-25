@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -26,6 +27,7 @@ public class GameScene {
     private Scene scene;
 
     private Player player;
+    private ObstacleGeneration obstacleGeneration;
 
     private Pane root;
 
@@ -34,14 +36,33 @@ public class GameScene {
     private ImageView tempImageView;
 
     private MediaPlayer backgroundMediaPlayer;
+    private Timeline bgMovementTimer;
     private int bgSpeed = 1;
     private int bgSpeedWhenPlayerJumps = 4;
 
+    private Timeline playerScoreTimer;
     private int playerScore = 0;
 
     public GameScene(Stage stage) {
         this.stage = stage;
         scene = new Scene(createRoot(), Main.WIDTH, Main.HEIGHT);
+        scene.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.SPACE) {
+                player.jump();
+            }
+        });
+    }
+
+    public Scene getScene() {
+        return scene;
+    }
+
+    public void play() {
+        player.play();
+        obstacleGeneration.play();
+        bgMovementTimer.play();
+        playerScoreTimer.play();
+        backgroundMediaPlayer.play();
     }
 
     private Pane createRoot() {
@@ -98,8 +119,8 @@ public class GameScene {
     }
 
     private void createObstacles() {
-        ObstacleGeneration obstacleGeneration = new ObstacleGeneration(root, player, 2);
-        obstacleGeneration.play();
+        obstacleGeneration = new ObstacleGeneration(root, player, 2);
+        //obstacleGeneration.play();
     }
 
     private void createMedia(){
@@ -111,7 +132,7 @@ public class GameScene {
     }
 
     private void createBgMovement(){
-        Timeline bgMovementTimer = new Timeline(new KeyFrame(Duration.seconds(0.01), event -> {
+        bgMovementTimer = new Timeline(new KeyFrame(Duration.seconds(0.01), event -> {
             if(imageView.getY() > imageView.getBoundsInLocal().getHeight()){
                 imageView.setY( -1 * imageView.getBoundsInLocal().getHeight());
                 tempImageView = imageView;
@@ -123,7 +144,7 @@ public class GameScene {
             imageView2.setY( imageView.getY() - imageView.getBoundsInLocal().getHeight());
         }));
         bgMovementTimer.setCycleCount(Timeline.INDEFINITE);
-        bgMovementTimer.play();
+        //bgMovementTimer.play();
     }
 
     private void createUserScore(){
@@ -132,11 +153,11 @@ public class GameScene {
         textPlayerScore.setTextFill(Color.web("#1c1c26",1.0));
         textPlayerScore.setLayoutX(15);
         textPlayerScore.setLayoutY(20);
-        Timeline playerScoreTimer = new Timeline(
+        playerScoreTimer = new Timeline(
                 new KeyFrame(Duration.seconds(0.5),
                         event -> textPlayerScore.setText( Integer.toString(++playerScore))));
         playerScoreTimer.setCycleCount(Timeline.INDEFINITE);
-        playerScoreTimer.play();
+        //playerScoreTimer.play();
         root.getChildren().add(textPlayerScore);
     }
 }
