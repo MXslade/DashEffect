@@ -34,6 +34,7 @@ public class MovementParticlesGeneration {
 
     public void pause() {
         launchingParticles.pause();
+        currentParticle = 0;
     }
 
     private void createParticles() {
